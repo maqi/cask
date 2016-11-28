@@ -52,24 +52,24 @@ fn main() {
     let mut txs = Vec::new();
     for id in 1..N_THREADS + 1 {
         let (tx, rx) = mpsc::channel();
-        let cask = cask.clone();
+        let cask = cask.as_ref().unwrap().clone();
         let vec = vec![1u8; 4096];
         let mut rng: XorShiftRng = SeedableRng::from_seed(seed);
 
         let t = thread::spawn(move || {
             let mut i = 0;
             loop {
-                if let Ok(_) = rx.try_recv() {
+                if rx.try_recv().is_ok() {
                     break;
                 }
 
                 let r = rng.next_f64();
                 if r < WRITE_PROBABILITY {
                     let key = (id * i).to_string();
-                    cask.put(key, &vec);
+                    cask.put(key, &vec).unwrap();
                 } else {
                     let key = ((base_value + (id * i)) * r as usize).to_string();
-                    cask.get(key);
+                    cask.get(key).unwrap();
                 }
 
                 i += 1
