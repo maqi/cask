@@ -50,6 +50,7 @@ cask.delete(key);
 - [ ] Merge files during compaction
 - [ ] Configurable compaction triggers and thresholds
 - [ ] Proper error handling
+- [ ] Data corruption recovery
 - [ ] Add tests
 - [ ] Benchmark
 
